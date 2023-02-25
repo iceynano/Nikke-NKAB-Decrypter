@@ -24,7 +24,14 @@ namespace Nikke_NKAB_Decrypter
                 string[] files = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly);
                 foreach (string file in files)
                 {
-                    Decrypt(file);
+                    try
+                    {
+                        Decrypt(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        //Console.WriteLine(file);
+                    }
                 }
             }
             else
@@ -56,7 +63,7 @@ namespace Nikke_NKAB_Decrypter
                             int num = br.ReadInt16();
                             br.BaseStream.Position = 0xC;
                             int keyLen = br.ReadInt16() + num;
-                            int encryptedLen = br.ReadInt16() + num;
+                            int encryptedLen = br.ReadUInt16() + num;
                             iv = br.ReadBytes(0x10);
                             encrypted = br.ReadBytes(encryptedLen);
                             body = br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position - 0x20));
