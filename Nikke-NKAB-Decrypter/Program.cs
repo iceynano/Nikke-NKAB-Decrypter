@@ -30,7 +30,7 @@ namespace Nikke_NKAB_Decrypter
                     }
                     catch (Exception ex)
                     {
-                        //Console.WriteLine(file);
+                        Console.WriteLine(file);
                     }
                 }
             }
@@ -63,7 +63,12 @@ namespace Nikke_NKAB_Decrypter
                             int num = br.ReadInt16();
                             br.BaseStream.Position = 0xC;
                             int keyLen = br.ReadInt16() + num;
-                            int encryptedLen = br.ReadUInt16() + num;
+                            int encryptedLen = br.ReadInt16() + num;
+                            if (encryptedLen < 0)
+                            {
+                                br.BaseStream.Position -= 2;
+                                encryptedLen = br.ReadUInt16() + num;
+                            }
                             iv = br.ReadBytes(0x10);
                             encrypted = br.ReadBytes(encryptedLen);
                             body = br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position - 0x20));
