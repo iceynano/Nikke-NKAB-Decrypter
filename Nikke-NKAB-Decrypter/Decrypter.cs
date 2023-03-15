@@ -39,6 +39,11 @@ namespace Nikke_NKAB_Decrypter
                         int num = br.ReadInt16();
                         br.BaseStream.Position = 0xC;
                         int keyLen = br.ReadInt16() + num;
+                        if (keyLen < 0)
+                        {
+                            br.BaseStream.Position -= 2;
+                            keyLen = br.ReadUInt16() + num;
+                        }
                         int encryptedLen = br.ReadInt16() + num;
                         if (encryptedLen < 0)
                         {
