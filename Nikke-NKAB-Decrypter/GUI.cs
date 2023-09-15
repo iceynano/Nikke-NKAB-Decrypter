@@ -48,7 +48,7 @@ namespace Nikke_NKAB_Decrypter
 
         private void btnDecrypt_Click(object sender, EventArgs e)
         {
-            if (tbDirPath.Text.Trim().Length > 0 && tbExportPath.Text.Trim().Length > 0) 
+            if (!_IsBusy && tbDirPath.Text.Trim().Length > 0 && tbExportPath.Text.Trim().Length > 0) 
             {
                 _IsBusy = true;
                 Task.Run(() =>
@@ -58,7 +58,7 @@ namespace Nikke_NKAB_Decrypter
                         string[] files = Directory.GetFiles(tbDirPath.Text, "*", SearchOption.TopDirectoryOnly);
                         for (int i = 0;i < files.Length; i++)
                         {
-                            Decrypter.Decrypt(files[i], tbExportPath.Text);
+                            Decrypter.DecryptV3(files[i], tbExportPath.Text);
                             int percent = (int)Math.Round((double)(i * 100) / files.Length);
                             progressBar.BeginInvoke((MethodInvoker)delegate
                             {
@@ -73,6 +73,45 @@ namespace Nikke_NKAB_Decrypter
                         MessageBox.Show(err.Message, "Error");
                     }
                 }).GetAwaiter().OnCompleted(() => { _IsBusy = false; });
+            }
+        }
+
+        private void btnEncrypt_Click(object sender, EventArgs e)
+        {
+            if (!_IsBusy && tbExportPath.Text.Trim().Length > 0 && tbEncryptPath.Text.Trim().Length > 0)
+            {
+                _IsBusy = true;
+                Task.Run(() =>
+                {
+                    try
+                    {
+                        string[] files = Directory.GetFiles(tbExportPath.Text, "*", SearchOption.TopDirectoryOnly);
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            Decrypter.EncryptV3(files[i], tbEncryptPath.Text);
+                            int percent = (int)Math.Round((double)(i * 100) / files.Length);
+                            progressBar.BeginInvoke((MethodInvoker)delegate
+                            {
+                                progressBar.Value = percent >= 100 ? 100 : percent;
+                            });
+
+                        }
+                    }
+                    catch (Exception err)
+                    {
+                        _IsBusy = false;
+                        MessageBox.Show(err.Message, "Error");
+                    }
+                }).GetAwaiter().OnCompleted(() => { _IsBusy = false; });
+            }
+        }
+
+        private void btnEncryptSelect_Click(object sender, EventArgs e)
+        {
+            string folderPath = Utils.FolderBrowser("Encrypt path");
+            if (!string.IsNullOrEmpty(folderPath))
+            {
+                tbEncryptPath.Text = folderPath;
             }
         }
     }
