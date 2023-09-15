@@ -58,7 +58,7 @@ namespace Nikke_NKAB_Decrypter
                         string[] files = Directory.GetFiles(tbDirPath.Text, "*", SearchOption.TopDirectoryOnly);
                         for (int i = 0;i < files.Length; i++)
                         {
-                            Decrypter.DecryptV3(files[i], tbExportPath.Text);
+                            Decrypter.DecryptV3(files[i], Path.Combine(tbExportPath.Text, Path.GetFileName(files[i]) + ".bundle"));
                             int percent = (int)Math.Round((double)(i * 100) / files.Length);
                             progressBar.BeginInvoke((MethodInvoker)delegate
                             {
@@ -85,10 +85,10 @@ namespace Nikke_NKAB_Decrypter
                 {
                     try
                     {
-                        string[] files = Directory.GetFiles(tbExportPath.Text, "*", SearchOption.TopDirectoryOnly);
+                        string[] files = Directory.GetFiles(tbExportPath.Text, "*.bundle", SearchOption.TopDirectoryOnly);
                         for (int i = 0; i < files.Length; i++)
                         {
-                            Decrypter.EncryptV3(files[i], tbEncryptPath.Text);
+                            Decrypter.EncryptV3(files[i], Path.Combine(tbEncryptPath.Text, Path.GetFileNameWithoutExtension(files[i])));
                             int percent = (int)Math.Round((double)(i * 100) / files.Length);
                             progressBar.BeginInvoke((MethodInvoker)delegate
                             {
