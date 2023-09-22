@@ -35,15 +35,25 @@ namespace Nikke_NKAB_Decrypter
     {
         private static readonly int MAGIC_BYTES = 0x42414B4E;
         private static readonly int VERSION = 3;
+        private static readonly int KEY_VERSION = 2;
+        private static readonly int KEY_COUNT = 5;
 
-        // https://github.com/Razmoth/Nikke/blob/main/Nikke.py
-        private static readonly Dictionary<int, string> KEYS = new Dictionary<int, string>()
+        private static readonly Dictionary<int, string> CRYPTO_KEYS_V0 = new Dictionary<int, string>()
             {
                 { 0, "FD349BC9466D2164C7C3D70F6A74B9789BBA88E8A082AA79D1FF2BE43CB6B8E4" },
                 { 1, "1E5201A2CE36D4D2C6C90960A9D83DD5582145D0A07133C99DE64075B1760A08" },
                 { 2, "68513206DAEAFC575810E08DA863C1E632F74F908BF0F8C26A2092D46A06D63A" },
                 { 3, "7EFBABB49C7CA113422952AA8CE61078BD05DB12D89C6AEEB52F4055D99EDEE2" },
                 { 4, "09700174614C7095FC06A44F4165127839D940374E130D300A7A182A6AD52F7A" }
+            };
+
+        private static readonly Dictionary<int, string> CRYPTO_KEYS_V1 = new Dictionary<int, string>()
+            {
+                { 0, "22FE0B17ABCA1037016BABC2E63CA9E9491513F5BB1CA10F0BB107DE8C626047" },
+                { 1, "7A624586CF64AEE191ABE5A6AFBF0D305E9335E838A509673C83E3B3D8423F13" },
+                { 2, "C610B5C24C3C8412073C17F29F76F853914C35A5137B8696824986446C6ECEAA" },
+                { 3, "6DA00E8237E90B4EFD1DBA233FA10E23D26A6093390D8D30A05C82EF5C7B3DD3" },
+                { 4, "9EB872D96BE1AD103C215E22522F95725E4E81098313445CE3F8BC7A98E2FA11" }
             };
         private class BundleHeaderParam
         {
@@ -92,6 +102,17 @@ namespace Nikke_NKAB_Decrypter
                 cryptoStream.FlushFinalBlock();
 
                 return ms.ToArray();
+            }
+        }
+        private static Dictionary<int, string> GetKeySet(int keyVersion)
+        {
+            switch (keyVersion)
+            {
+                case 0:
+                    return CRYPTO_KEYS_V0;
+                case 2:
+                    return CRYPTO_KEYS_V1;
+                default: return null;
             }
         }
         private static BundleHeaderParam ReadBundleHeader(ref BinaryReader br)
@@ -160,7 +181,8 @@ namespace Nikke_NKAB_Decrypter
             bw.Write((short)(obfuscateValue * -1));
             byte[] keyB = GenerateByteArray(0x20);
             bw.Write(keyB);
-            byte[] keyA = StringToByteArray(KEYS[keyIndex]);
+            var keySet = GetKeySet(KEY_VERSION);
+            byte[] keyA = StringToByteArray(keySet[keyIndex]);
             byte[] key = hash.ComputeHash(keyA.Concat(keyB).ToArray());
             var aes = new AesManaged
             {
@@ -202,8 +224,9 @@ namespace Nikke_NKAB_Decrypter
             int footerBlockCount = header.BlockCount & 0xFF;
             int decryptedSize = (int)(br.BaseStream.Length - br.BaseStream.Position);
             int dataOffset = (int)br.BaseStream.Position;
-            if (header.KeyIndex >= KEYS.Count) return;
-            byte[] keyA = StringToByteArray(KEYS[header.KeyIndex]);
+            if (header.KeyIndex >= KEY_COUNT) return;
+            var keySet = GetKeySet(header.KeyVersion);
+            byte[] keyA = StringToByteArray(keySet[header.KeyIndex]);
 
             HashAlgorithm hash = SHA256.Create();
             byte[] key = hash.ComputeHash(keyA.Concat(header.KeyB).ToArray());
