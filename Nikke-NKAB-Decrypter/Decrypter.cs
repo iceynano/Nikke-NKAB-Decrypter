@@ -173,10 +173,10 @@ namespace Nikke_NKAB_Decrypter
             int flags = rd.Next(0xFF, 0xFFFF);
             br.BaseStream.Seek(0, SeekOrigin.Begin);
             bw.Write((short)(0x3C - obfuscateValue));
-            bw.Write((short)(obfuscateValue * -1));
-            bw.Write((short)(obfuscateValue * -1));
+            bw.Write((short)(KEY_VERSION - obfuscateValue));
             int keyIndex = rd.Next(0, 4);
             bw.Write((short)(keyIndex - obfuscateValue));
+            bw.Write((short)(1 - obfuscateValue));
             bw.Write((short)(flags - obfuscateValue));
             bw.Write((short)(obfuscateValue * -1));
             byte[] keyB = GenerateByteArray(0x20);

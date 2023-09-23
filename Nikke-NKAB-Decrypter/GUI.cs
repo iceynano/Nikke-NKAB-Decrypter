@@ -59,7 +59,7 @@ namespace Nikke_NKAB_Decrypter
                         for (int i = 0;i < files.Length; i++)
                         {
                             Decrypter.DecryptV3(files[i], Path.Combine(tbExportPath.Text, Path.GetFileName(files[i]) + ".bundle"));
-                            int percent = (int)Math.Round((double)(i * 100) / files.Length);
+                            int percent = (int)Math.Ceiling((double)(i * 100) / files.Length);
                             progressBar.BeginInvoke((MethodInvoker)delegate
                             {
                                 progressBar.Value = percent >= 100 ? 100 : percent;
@@ -72,7 +72,7 @@ namespace Nikke_NKAB_Decrypter
                         _IsBusy = false;
                         MessageBox.Show(err.Message, "Error");
                     }
-                }).GetAwaiter().OnCompleted(() => { _IsBusy = false; });
+                }).GetAwaiter().OnCompleted(() => { _IsBusy = false; progressBar.Value = 100; });
             }
         }
 
@@ -89,7 +89,7 @@ namespace Nikke_NKAB_Decrypter
                         for (int i = 0; i < files.Length; i++)
                         {
                             Decrypter.EncryptV3(files[i], Path.Combine(tbEncryptPath.Text, Path.GetFileNameWithoutExtension(files[i])));
-                            int percent = (int)Math.Round((double)(i * 100) / files.Length);
+                            int percent = (int)Math.Ceiling((double)(i * 100) / files.Length);
                             progressBar.BeginInvoke((MethodInvoker)delegate
                             {
                                 progressBar.Value = percent >= 100 ? 100 : percent;
@@ -102,7 +102,7 @@ namespace Nikke_NKAB_Decrypter
                         _IsBusy = false;
                         MessageBox.Show(err.Message, "Error");
                     }
-                }).GetAwaiter().OnCompleted(() => { _IsBusy = false; });
+                }).GetAwaiter().OnCompleted(() => { _IsBusy = false; progressBar.Value = 100; });
             }
         }
 
