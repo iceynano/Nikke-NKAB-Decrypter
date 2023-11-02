@@ -40,6 +40,7 @@
             this.btnEncryptSelect = new System.Windows.Forms.Button();
             this.tbEncryptPath = new System.Windows.Forms.TextBox();
             this.btnEncrypt = new System.Windows.Forms.Button();
+            this.linkGithub = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // tbDirPath
@@ -98,14 +99,14 @@
             // 
             // progressBar
             // 
-            this.progressBar.Location = new System.Drawing.Point(12, 262);
+            this.progressBar.Location = new System.Drawing.Point(12, 250);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(360, 23);
             this.progressBar.TabIndex = 6;
             // 
             // btnDecrypt
             // 
-            this.btnDecrypt.Location = new System.Drawing.Point(12, 197);
+            this.btnDecrypt.Location = new System.Drawing.Point(12, 193);
             this.btnDecrypt.Name = "btnDecrypt";
             this.btnDecrypt.Size = new System.Drawing.Size(360, 23);
             this.btnDecrypt.TabIndex = 7;
@@ -142,7 +143,7 @@
             // 
             // btnEncrypt
             // 
-            this.btnEncrypt.Location = new System.Drawing.Point(12, 226);
+            this.btnEncrypt.Location = new System.Drawing.Point(12, 220);
             this.btnEncrypt.Name = "btnEncrypt";
             this.btnEncrypt.Size = new System.Drawing.Size(360, 23);
             this.btnEncrypt.TabIndex = 11;
@@ -150,11 +151,23 @@
             this.btnEncrypt.UseVisualStyleBackColor = true;
             this.btnEncrypt.Click += new System.EventHandler(this.btnEncrypt_Click);
             // 
+            // linkGithub
+            // 
+            this.linkGithub.AutoSize = true;
+            this.linkGithub.Location = new System.Drawing.Point(12, 285);
+            this.linkGithub.Name = "linkGithub";
+            this.linkGithub.Size = new System.Drawing.Size(91, 13);
+            this.linkGithub.TabIndex = 12;
+            this.linkGithub.TabStop = true;
+            this.linkGithub.Text = "Github Repository";
+            this.linkGithub.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkGithub_LinkClicked);
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(384, 311);
+            this.Controls.Add(this.linkGithub);
             this.Controls.Add(this.btnEncrypt);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.btnEncryptSelect);
@@ -189,5 +202,6 @@
         private System.Windows.Forms.Button btnEncryptSelect;
         private System.Windows.Forms.TextBox tbEncryptPath;
         private System.Windows.Forms.Button btnEncrypt;
+        private System.Windows.Forms.LinkLabel linkGithub;
     }
 }

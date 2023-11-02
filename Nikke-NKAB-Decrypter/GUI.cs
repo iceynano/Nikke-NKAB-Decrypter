@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Nikke_NKAB_Decrypter
 {
@@ -113,6 +114,11 @@ namespace Nikke_NKAB_Decrypter
             {
                 tbEncryptPath.Text = folderPath;
             }
+        }
+
+        private void linkGithub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Utils.OpenUrl("https://github.com/lehieugch68/Nikke-NKAB-Decrypter");
         }
     }
 }

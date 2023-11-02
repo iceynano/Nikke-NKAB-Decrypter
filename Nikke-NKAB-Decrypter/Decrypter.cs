@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Nikke_NKAB_Decrypter
 {
@@ -35,7 +36,7 @@ namespace Nikke_NKAB_Decrypter
     {
         private static readonly int MAGIC_BYTES = 0x42414B4E;
         private static readonly int VERSION = 3;
-        private static readonly int KEY_VERSION = 2;
+        private static readonly int KEY_VERSION = 3;
         private static readonly int KEY_COUNT = 5;
 
         private static readonly Dictionary<int, string> CRYPTO_KEYS_V0 = new Dictionary<int, string>()
@@ -47,13 +48,21 @@ namespace Nikke_NKAB_Decrypter
                 { 4, "09700174614C7095FC06A44F4165127839D940374E130D300A7A182A6AD52F7A" }
             };
 
-        private static readonly Dictionary<int, string> CRYPTO_KEYS_V1 = new Dictionary<int, string>()
+        private static readonly Dictionary<int, string> CRYPTO_KEYS_V2 = new Dictionary<int, string>()
             {
                 { 0, "22FE0B17ABCA1037016BABC2E63CA9E9491513F5BB1CA10F0BB107DE8C626047" },
                 { 1, "7A624586CF64AEE191ABE5A6AFBF0D305E9335E838A509673C83E3B3D8423F13" },
                 { 2, "C610B5C24C3C8412073C17F29F76F853914C35A5137B8696824986446C6ECEAA" },
                 { 3, "6DA00E8237E90B4EFD1DBA233FA10E23D26A6093390D8D30A05C82EF5C7B3DD3" },
                 { 4, "9EB872D96BE1AD103C215E22522F95725E4E81098313445CE3F8BC7A98E2FA11" }
+            };
+        private static readonly Dictionary<int, string> CRYPTO_KEYS_V3 = new Dictionary<int, string>()
+            {
+                { 0, "C578729E293E291E5AC4D32E0353A9E2CD01A414C074B1D3E4B637BCA5BDA633" },
+                { 1, "143F8B0551033DAEC3D4D5022BC3A4D3CFBA0FC204A54C84E2F4039C0AD31C02" },
+                { 2, "F2D0A0CC929A2B665C84F3BF308B66AE4839AD4E556FD74FFE64BB644A8F2468" },
+                { 3, "5F3CEFF0BC900BC2FA833A0EC1D2B4F94A23E3329CAEB93EB33E9DD3EEE803E4" },
+                { 4, "9CA68AD188F1AC4C6126C4A0BE46DF7D6168165D0A1DF9199603A4D3B98AFD90" }
             };
         private class BundleHeaderParam
         {
@@ -111,7 +120,9 @@ namespace Nikke_NKAB_Decrypter
                 case 0:
                     return CRYPTO_KEYS_V0;
                 case 2:
-                    return CRYPTO_KEYS_V1;
+                    return CRYPTO_KEYS_V2;
+                case 3:
+                    return CRYPTO_KEYS_V3;
                 default: return null;
             }
         }
@@ -224,8 +235,9 @@ namespace Nikke_NKAB_Decrypter
             int footerBlockCount = header.BlockCount & 0xFF;
             int decryptedSize = (int)(br.BaseStream.Length - br.BaseStream.Position);
             int dataOffset = (int)br.BaseStream.Position;
-            if (header.KeyIndex >= KEY_COUNT) return;
             var keySet = GetKeySet(header.KeyVersion);
+
+            if (keySet == null || header.KeyIndex >= KEY_COUNT) throw new Exception("Crypto Key version is not yet supported.");
             byte[] keyA = StringToByteArray(keySet[header.KeyIndex]);
 
             HashAlgorithm hash = SHA256.Create();
