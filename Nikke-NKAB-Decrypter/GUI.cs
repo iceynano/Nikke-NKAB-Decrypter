@@ -24,7 +24,7 @@ namespace Nikke_NKAB_Decrypter
         {
             try
             {
-                tbDirPath.Text = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "com_proximabeta", "NIKKE", "eb");
+                tbDirPath.Text = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "LocalLow", "Unity", "com_proximabeta_NIKKE", "aeb001dfac41dab1192aeo074efc3e21");
             }
             catch { }
         }

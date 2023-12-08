@@ -36,7 +36,7 @@ namespace Nikke_NKAB_Decrypter
     {
         private static readonly int MAGIC_BYTES = 0x42414B4E;
         private static readonly int VERSION = 3;
-        private static readonly int KEY_VERSION = 3;
+        private static readonly int KEY_VERSION = 4;
         private static readonly int KEY_COUNT = 5;
 
         private static readonly Dictionary<int, string> CRYPTO_KEYS_V0 = new Dictionary<int, string>()
@@ -63,6 +63,14 @@ namespace Nikke_NKAB_Decrypter
                 { 2, "F2D0A0CC929A2B665C84F3BF308B66AE4839AD4E556FD74FFE64BB644A8F2468" },
                 { 3, "5F3CEFF0BC900BC2FA833A0EC1D2B4F94A23E3329CAEB93EB33E9DD3EEE803E4" },
                 { 4, "9CA68AD188F1AC4C6126C4A0BE46DF7D6168165D0A1DF9199603A4D3B98AFD90" }
+            };
+        private static readonly Dictionary<int, string> CRYPTO_KEYS_V4 = new Dictionary<int, string>()
+            {
+                { 0, "C9673097C1ECA50DEAF00DF04C4FD7AE35AFF425446F7F55C8405908B89BA85F" },
+                { 1, "E36252F06068F940890CAC9286307C33978556B888ACB10C77C0FE3788515141" },
+                { 2, "D45D0343D2CCE869D3CE0689AB5BDA69D2E6AC4DE192AE75B17827D3D297EE1A" },
+                { 3, "A4B31AEE2C2E8F52809F9D050DE52A6D1EEDD56A05A44FCE365A4471616D534F" },
+                { 4, "013E270803F8F0EC3F45AF4C9E78FC71022B9E4BE7E6A1A5A89156B6F595D3FB" }
             };
         private class BundleHeaderParam
         {
@@ -123,6 +131,8 @@ namespace Nikke_NKAB_Decrypter
                     return CRYPTO_KEYS_V2;
                 case 3:
                     return CRYPTO_KEYS_V3;
+                case 4:
+                    return CRYPTO_KEYS_V4;
                 default: return null;
             }
         }
